@@ -7,6 +7,10 @@ TowerPosition::TowerPosition(QPoint pos):
     _pos(pos),_hastower(false)
 {}
 
+const QPoint TowerPosition::getPos() const{
+    return _pos;
+}
+
 const QPoint TowerPosition::centerPos() const{
     QPoint halfpoint(_fixedsize.width()/2,_fixedsize.height()/2);
     return _pos+halfpoint;

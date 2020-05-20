@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     towerposition.cpp \
-    tower.cpp
+    tower.cpp \
+    enemy.cpp
 
 HEADERS += \
         mainwindow.h \
     towerposition.h \
-    tower.h
+    tower.h \
+    enemy.h
 
 
 FORMS += \

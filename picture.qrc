@@ -2,9 +2,6 @@
     <qresource prefix="/new/prefix1">
         <file>picture/TileB.png</file>
         <file>picture/first map.png</file>
-        <file>config/Info.plist</file>
-        <file>config/TowersPosition.plist</file>
-        <file>config/Waves.plist</file>
         <file>main.cpp</file>
         <file>mainwindow.cpp</file>
         <file>mainwindow.h</file>
