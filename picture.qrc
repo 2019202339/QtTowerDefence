@@ -13,6 +13,11 @@
         <file>picture/towerposition.png</file>
         <file>picture/tower.png</file>
         <file>picture/tower2.png</file>
+        <file>picture/enemy1.png</file>
+        <file>picture/enemy2.png</file>
+        <file>picture/enemy3.png</file>
+        <file>picture/enemy4.png</file>
+        <file>picture/enemy5.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

@@ -15,6 +15,7 @@ public:
     bool mostlevel();//判断塔的等级
     void build();//在空置塔位建造塔
     void build1();//针对已经存在的塔升级
+    void uninstall();//对塔进行拆除
 
 
 protected:

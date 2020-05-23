@@ -19,6 +19,10 @@ void Tower::build1(){
     _range=90;
     _strength=20;
 }
+void Tower::uninstall(){
+    _mostlevel=false;
+    _live=false;
+}
 bool Tower::mostlevel(){
     return _mostlevel;
 }

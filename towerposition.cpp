@@ -29,7 +29,6 @@ bool TowerPosition::hastower() const{
 void TowerPosition::settower(){
     _hastower=true;
 }
-void TowerPosition::drawtower(QPainter *painter) const
-{
-    painter->drawPixmap(_pos.x(), _pos.y(), _sprite);
+void TowerPosition::nosettower(){
+    _hastower=false;
 }

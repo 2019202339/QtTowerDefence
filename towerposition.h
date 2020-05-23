@@ -10,6 +10,7 @@ class TowerPosition//设置一个类，判断每一个点是否可以存放塔
 public:
     TowerPosition(QPoint pos);
     void settower();//放置防御塔
+    void nosettower();//拆除防御塔
     bool hastower() const;//判断是否有防御塔
     const QPoint getPos() const;//返回塔位的坐标（左上角坐标）
     const QPoint centerPos() const;//返回该位置的中心点

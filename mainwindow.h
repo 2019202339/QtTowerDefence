@@ -7,7 +7,7 @@
 #include<QList>
 #include<QMouseEvent>
 #include<QTimerEvent>
-
+#include<enemy.h>
 namespace Ui {
 class MainWindow;
 }
@@ -20,12 +20,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *);
-    void timerEvent(QTimerEvent *);
+    void timerEvent(QTimerEvent *event);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
-    QPoint point[12] =//初始化12个可放置点
+    QPoint point[12] =//初始化12个塔台点
     {
         QPoint(65, 220),
         QPoint(155, 220),
@@ -41,6 +41,13 @@ private:
         QPoint(170, 35),
         QPoint(260, 35),
         QPoint(350, 35)
+    };
+    QPoint turnpoint[4]=//初始化4个转弯点
+    {
+        QPoint(445, 100),
+        QPoint(445, 195),
+        QPoint(0, 195),
+        QPoint(0, 290)
     };
     TowerPosition pos[12] =//初始化12个塔位
     {
@@ -75,6 +82,25 @@ private:
         Tower(QPoint(170, 35)),
         Tower(QPoint(260, 35)),
         Tower(QPoint(350, 35))
+    };
+
+    Enemy enemy[15]=//初始化15只不同等级怪物（后期还会对波数和怪物数量进行进一步优化，目前暂定为15只）
+    {
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,70),1),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,60),2),
+        Enemy(QPoint(0,40),3),
+        Enemy(QPoint(0,40),3)
     };
 };
 
