@@ -18,6 +18,14 @@
         <file>picture/enemy3.png</file>
         <file>picture/enemy4.png</file>
         <file>picture/enemy5.png</file>
+        <file>picture/map0.png</file>
+        <file>picture/Button.png</file>
+        <file>sounds/crash.mp3</file>
+        <file>sounds/enemydead.mp3</file>
+        <file>sounds/tower1birth.mp3</file>
+        <file>sounds/button.mp3</file>
+        <file>sounds/bgm.mp3</file>
+        <file>sounds/bgm0.mp3</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

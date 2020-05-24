@@ -1,10 +1,14 @@
 #include "enemy.h"
 #include<QPoint>
 #include<math.h>
+#include<QMediaPlayer>
+
 double distance(QPoint m,QPoint n){
     return sqrt((m.x()-n.x())*(m.x()-n.x())+(m.y()-n.y())*(m.y()-n.y()));
 }
 Enemy::Enemy(QPoint pos,int level):_pos(pos),_live(false),_speed(1),_hp(100*level),_direction(1),_level(level)
+{}
+Enemy::Enemy(const Enemy &w):_pos(w._pos),_live(w._live),_speed(w._speed),_hp(w._hp),_direction(w._direction),_level(w._level)
 {}
 QPoint Enemy::pos(){
     return _pos;
@@ -75,8 +79,13 @@ void Enemy::birth(){
     _live=true;
 }
 void Enemy::death(){
-    if(_hp<=0)//hp小于等于0判定怪物死亡
+    if(_hp<=0){//hp小于等于0判定怪物死亡
+        QMediaPlayer *player1 = new QMediaPlayer;
+        player1->setMedia(QUrl("qrc:/new/prefix1/sounds/enemydead.mp3"));
+        player1->setVolume(30);
+        player1->play();
         _live=false;
+    }
 }
 void Enemy::bite(){
     if(_level<=2){
@@ -87,4 +96,10 @@ void Enemy::bite(){
         if(distance(_pos,QPoint(430,270))<80)
         _hp=0;//怪物攻击基地后自行消失
     }
+}
+void Enemy::attacked(int strength){
+    _hp-=strength;
+}
+double Enemy::hp(){
+    return _hp;
 }

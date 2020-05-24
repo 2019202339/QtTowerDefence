@@ -6,7 +6,8 @@
 #include<tower.h>
 #include<enemy.h>
 #include<QTime>
-
+#include<QDebug>
+#include<QMediaPlayer>
 int j=0;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     startTimer(100);//运动状态刷新时间，返回值timerId为2
     startTimer(3000);//怪物产生时间间隔，返回值timerId为3
+    startTimer(1000);//防御塔攻击时间间隔，返回值timeId为4
+    QMediaPlayer *player = new QMediaPlayer;
+    player->setMedia(QUrl("qrc:/new/prefix1/sounds/bgm.mp3"));
+    player->setVolume(30);
+    player->play();
 }
 void MainWindow::paintEvent(QPaintEvent *)
 {
@@ -35,17 +41,37 @@ void MainWindow::paintEvent(QPaintEvent *)
         }
 
     }
-    for(int i=0;i<15;i++){//根据存货情况和登记情况绘制相应的怪物图像
-        if(enemy[i].live()&&enemy[i].level()==1&&i%2==0)
-            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy1.png"));
-        if(enemy[i].live()&&enemy[i].level()==1&&i%2!=0)
-            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy2.png"));
-        if(enemy[i].live()&&enemy[i].level()==2&&i%2==0)
-            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy3.png"));
-        if(enemy[i].live()&&enemy[i].level()==2&&i%2!=0)
-            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy4.png"));
-        if(enemy[i].live()&&enemy[i].level()==3)
-            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy5.png"));
+    for(int i=0;i<15;i++){//根据存活情况和登记情况绘制相应的怪物图像
+        if(enemy[i].live()&&enemy[i].level()==1&&i%2==0){
+            painter.setPen(Qt::red);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50,1);
+            painter.setPen(Qt::green);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50*(enemy[i].hp()/100),1);//利用矩形组合的方法绘制血槽
+            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy1.png"));}
+        if(enemy[i].live()&&enemy[i].level()==1&&i%2!=0){
+            painter.setPen(Qt::red);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50,1);
+            painter.setPen(Qt::green);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50*(enemy[i].hp()/100),1);
+            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy2.png"));}
+        if(enemy[i].live()&&enemy[i].level()==2&&i%2==0){
+            painter.setPen(Qt::red);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50,1);
+            painter.setPen(Qt::green);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50*(enemy[i].hp()/200),1);
+            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy3.png"));}
+        if(enemy[i].live()&&enemy[i].level()==2&&i%2!=0){
+            painter.setPen(Qt::red);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50,1);
+            painter.setPen(Qt::green);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50*(enemy[i].hp()/200),1);
+            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy4.png"));}
+        if(enemy[i].live()&&enemy[i].level()==3){
+            painter.setPen(Qt::red);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50,1);
+            painter.setPen(Qt::green);
+            painter.drawRect(enemy[i].pos().x(),enemy[i].pos().y(),50*(enemy[i].hp()/300),1);
+            painter.drawPixmap(enemy[i].pos(), QPixmap(":/new/prefix1/picture/enemy5.png"));}
     }
 
 }
@@ -58,8 +84,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             pos[i].settower();//对塔台做“已有”标记
             update();
         }
-        else if(pos[i].containPoint(pressPos)&&pos[i].hastower()==true){//判断鼠标点击处是否为塔台并判断是否已经防止防御塔（“有放置”）
+        else if(pos[i].containPoint(pressPos)&&pos[i].hastower()&&!tower[i].mostlevel()){//判断鼠标点击处是否为塔台并判断是否已经防止防御塔（“有放置”）
             tower[i].build1();//升级防御塔
+            update();//刷新画面
+        }
+        else if(pos[i].containPoint(pressPos)&&pos[i].hastower()&&tower[i].mostlevel()){//判断鼠标点击处是否为塔台并判断该处是否已经拥有最高等级防御塔
+            tower[i].uninstall();//拆除防御塔
+            pos[i].nosettower();//将塔台标记为无防御塔
             update();//刷新画面
         }
     }
@@ -81,6 +112,11 @@ void MainWindow::timerEvent(QTimerEvent *event)
                 enemy[i].death();//判断怪物是否已经死亡
             }
         }
+    }
+    if(event->timerId()==4){
+        for(int i=0;i<12;i++)//遍历每个塔的状态
+            if(tower[i].live())//如果塔存活
+            tower[i].attack(enemy);//执行攻击函数
     }
     update();//刷新画面
 
