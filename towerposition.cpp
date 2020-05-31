@@ -1,7 +1,7 @@
 #include "towerposition.h"
 #include<QPoint>
 #include<QPainter>
-const QSize TowerPosition::_fixedsize(44,44);//根据可置点的大小设定点击识别范围
+const QSize TowerPosition::_fixedsize(88,88);//根据可置点的大小设定点击识别范围
 
 TowerPosition::TowerPosition(QPoint pos):
     _pos(pos),_hastower(false)
@@ -9,11 +9,6 @@ TowerPosition::TowerPosition(QPoint pos):
 
 const QPoint TowerPosition::getPos() const{
     return _pos;
-}
-
-const QPoint TowerPosition::centerPos() const{
-    QPoint halfpoint(_fixedsize.width()/2,_fixedsize.height()/2);
-    return _pos+halfpoint;
 }
 
 bool TowerPosition::containPoint(const QPoint &p) const{

@@ -3,13 +3,26 @@
 #include <QPainter>
 #include <enemy.h>
 #include <QMediaPlayer>
+#include<QSize>
 QMediaPlayer *player2 = new QMediaPlayer;
 double distance1(QPoint m,QPoint n){
     return sqrt((m.x()-n.x())*(m.x()-n.x())+(m.y()-n.y())*(m.y()-n.y()));
 }
 Tower::Tower(const QPoint a):
-    _pos(a),_range(60),_strength(10),_rate(10),_live(false),_mostlevel(false),_hastarget(false),_target(-1)
+    _pos(a),_range(120),_strength(10),_rate(10),_live(false),_mostlevel(false),_hastarget(false),_target(-1),_price(100)
 {}
+void Tower::draw(QPainter *painter){
+    if(_live){//绘制防御塔
+        painter->drawPixmap(_pos,_picture);
+        painter->setPen(Qt::white);
+        painter->drawEllipse(centerPos(),_range,_range);//绘制攻击范围
+}
+}
+const QPoint Tower::centerPos() const{
+    QPoint halfpoint(44,44);
+    return _pos+halfpoint;
+}
+
 int Tower::range(){
     return _range;
 }
@@ -17,6 +30,7 @@ void Tower::build(){
     player2->setMedia(QUrl("qrc:/new/prefix1/sounds/tower1birth.mp3"));
     player2->setVolume(30);
     _live=true;
+    _picture=QPixmap(":/new/prefix1/picture/tower.png");
     player2->play();
 }
 bool Tower::live(){
@@ -27,8 +41,9 @@ void Tower::build1(){
     player2->setVolume(30);
     _live=true;
     _mostlevel=true;
-    _range=90;
+    _range=180;
     _strength=20;//参数随之升级
+    _picture=QPixmap(":/new/prefix1/picture/tower2.png");
     player2->play();
 }
 void Tower::uninstall(){
@@ -37,8 +52,9 @@ void Tower::uninstall(){
     player2->play();
     _mostlevel=false;
     _live=false;
-    _range=60;
-    _strength=50;//将所有参数回复到未激活状态
+    _range=120;
+    _strength=50;
+    _picture=QPixmap(":/new/prefix1/picture/tower.png");//将所有参数回复到未激活状态
 }
 bool Tower::mostlevel(){
     return _mostlevel;
@@ -66,4 +82,7 @@ void Tower::attack(Enemy enemy[15]){//塔的攻击函数
     if(hastarget()&&!enemy[_target].live()){//如果攻击目标死亡
         _hastarget=false;//失去该目标
     }
+}
+int Tower::price(){
+    return _price;
 }

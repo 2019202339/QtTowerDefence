@@ -17,7 +17,7 @@ Mywindow::Mywindow(QWidget *parent) ://初始化一个开始界面
     player->play();
     MyButton *bin = new MyButton(":/new/prefix1/picture/Button.png");//初始化一个开始按钮
     bin->setParent(this);
-    bin->move(340,200);
+    bin->move(680,400);
     connect(bin,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
         player->pause();//当前界面的音乐停止
         this->close();//当前界面关闭
