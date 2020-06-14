@@ -116,17 +116,21 @@ void Enemy::death(){
     }
 }
 void Enemy::bite(int & gamehp){
+    if(gamehp>=0){
     if(_level<=2){
         if(distance(_pos,QPoint(860,540))<100){
              _hp=0;//怪物攻击基地后自行消失
              gamehp=gamehp-10;
+             _hadreward=true;
         }
     }
     if(_level==3){
         if(distance(_pos,QPoint(860,540))<160){
             gamehp=gamehp-10;
             _hp=0;//怪物攻击基地后自行消失
+            _hadreward=true;
         }
+    }
     }
 }
 void Enemy::attacked(int strength){

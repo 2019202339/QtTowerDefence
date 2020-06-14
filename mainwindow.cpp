@@ -7,20 +7,27 @@
 #include<enemy.h>
 #include<QTime>
 #include<QDebug>
+#include<mybutton.h>
 #include<QMediaPlayer>
 #include<QBrush>
 #include<money.h>
 #include<QFont>
 #include<QRectF>
 int j=0;
+void MainWindow::setspeed(int speed){
+    game_speed=speed;
+}
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    startTimer(100);//运动状态刷新时间，返回值timerId为2
-    startTimer(3000);//怪物产生时间间隔，返回值timerId为3
-    startTimer(1000);//防御塔攻击时间间隔，返回值timeId为4
+    startTimer(50);//运动状态刷新时间，返回值timerId为2
+    startTimer(1500);//怪物产生时间间隔，返回值timerId为3
+    startTimer(500);//防御塔攻击时间间隔，返回值timeId为4
+    startTimer(25);//运动状态刷新时间，返回值timerId为5
+    startTimer(750);//怪物产生时间间隔，返回值timerId为6
+    startTimer(250);//防御塔攻击时间间隔，返回值timeId为7
     QMediaPlayer *player = new QMediaPlayer;
     player->setMedia(QUrl("qrc:/new/prefix1/sounds/bgm.mp3"));
     player->setVolume(30);
@@ -28,14 +35,17 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::paintEvent(QPaintEvent *)
 {
-
     QPainter painter(this);
     if(win){
         painter.drawPixmap(0,0,QPixmap(":/new/prefix1/picture/Win.png"));//绘制胜利场景
+        grade.getgrade(enemy,tower,money,hp,game_speed,true);
+        grade.drawgrade(&painter);
         return;//结束绘制
     }
     if(lost){
         painter.drawPixmap(0,0,QPixmap(":/new/prefix1/picture/Lost.png"));//绘制失败场景
+        grade.getgrade(enemy,tower,money,hp,game_speed,false);
+        grade.drawgrade(&painter);
         return;//结束绘制
     }
     painter.drawPixmap(0, 0, QPixmap(":/new/prefix1/picture/map.png"));//绘制地图背景
@@ -76,7 +86,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::timerEvent(QTimerEvent *event)
 {
     //怪物移动
-    if(event->timerId()==3){
+    if(game_speed==1)
+    {if(event->timerId()==3){
         enemy[j].birth();
         j+=1;
     }
@@ -101,6 +112,34 @@ void MainWindow::timerEvent(QTimerEvent *event)
             tower[i].attack(enemy);//执行攻击函数
     }
     update();//刷新画面
+}
+    if(game_speed==2){
+        if(event->timerId()==5){
+            for(int i=0;i<15;i++){//遍历每个怪物状态
+                if(enemy[i].live()){//判断怪物是否激活
+                    enemy[i].move();//怪物移动动作
+                    enemy[i].turn(turnpoint);//怪物转弯动作
+                    enemy[i].bite(hp);//判断怪物是否成功攻击基地
+                    enemy[i].death();//判断怪物是否已经死亡
+                    if(!enemy[i].live()&&!enemy[i].hadreward()){//奖励条件：怪物已经死亡，奖励尚未领取
+                        money=money+enemy[i].reward();//金币系统增加怪物奖励金额
+                        enemy[i].setreward();//改变该怪物奖励状态
+                    }
+                }
+            }
+            checkgame();
+        }
+        if(event->timerId()==6){
+                enemy[j].birth();
+                j+=1;
+            }
+            if(event->timerId()==7){
+                for(int i=0;i<12;i++)//遍历每个塔的状态
+                    if(tower[i].live())//如果塔存活
+                    tower[i].attack(enemy);//执行攻击函数
+            }
+            update();//刷新画面
+    }
 }
 void MainWindow::checkgame(){
     if(hp<=0){//生命值小于等于0游戏失败

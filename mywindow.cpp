@@ -15,13 +15,24 @@ Mywindow::Mywindow(QWidget *parent) ://初始化一个开始界面
     player->setMedia(QUrl("qrc:/new/prefix1/sounds/bgm0.mp3"));
     player->setVolume(30);
     player->play();
-    MyButton *bin = new MyButton(":/new/prefix1/picture/Button.png");//初始化一个开始按钮
-    bin->setParent(this);
-    bin->move(680,400);
-    connect(bin,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
+    MyButton *bin1 = new MyButton(":/new/prefix1/picture/Button1.png");//初始化一个开始按钮
+    bin1->setParent(this);
+    bin1->move(692,331);
+    connect(bin1,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
         player->pause();//当前界面的音乐停止
         this->close();//当前界面关闭
         MainWindow *scene = new MainWindow;//新建一个Mainwindow界面并打开
+        scene->setspeed(1);
+        scene->show();
+    });
+    MyButton *bin2 = new MyButton(":/new/prefix1/picture/Button2.png");//初始化一个开始按钮
+    bin2->setParent(this);
+    bin2->move(692,471);
+    connect(bin2,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
+        player->pause();//当前界面的音乐停止
+        this->close();//当前界面关闭
+        MainWindow *scene = new MainWindow;//新建一个Mainwindow界面并打开
+        scene->setspeed(2);
         scene->show();
     });
 }

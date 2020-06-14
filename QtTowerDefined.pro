@@ -32,7 +32,8 @@ SOURCES += \
     enemy.cpp \
     mywindow.cpp \
     mybutton.cpp \
-    money.cpp
+    money.cpp \
+    grade.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     enemy.h \
     mywindow.h \
     mybutton.h \
-    money.h
+    money.h \
+    grade.h
 
 
 FORMS += \

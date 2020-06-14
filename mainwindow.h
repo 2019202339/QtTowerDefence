@@ -9,6 +9,7 @@
 #include<QTimerEvent>
 #include<enemy.h>
 #include <money.h>
+#include <grade.h>
 namespace Ui {
 class MainWindow;
 }
@@ -23,13 +24,16 @@ public:
     void mousePressEvent(QMouseEvent *);
     void timerEvent(QTimerEvent *event);
     void checkgame();
+    void setspeed(int speed);
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
     bool win=false;
     bool lost=false;
+    int game_speed=1;
     int hp=100;
+    Grade grade=Grade(0);
     Money money=Money(300);
     QPoint turnpoint[4]=//初始化4个转弯点
     {

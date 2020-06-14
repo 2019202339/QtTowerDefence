@@ -28,6 +28,9 @@
         <file>sounds/bgm0.mp3</file>
         <file>picture/Lost.png</file>
         <file>picture/Win.png</file>
+        <file>picture/faster.png</file>
+        <file>picture/Button1.png</file>
+        <file>picture/Button2.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
