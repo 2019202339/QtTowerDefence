@@ -11,6 +11,8 @@ public:
     QPoint pos();//返回怪物所在点
     void draw(QPainter *painter);
     void move();//敌人移动（左上方）
+    void inslow();//进入减速状态
+    void outslow();//解除减速状态
     void turn(QPoint p[4]);//变换移动方向
     bool live();//返回存活状态
     int level();//返回等级
@@ -24,6 +26,8 @@ public:
     double hp();//返回怪物血量
 protected:
     QPoint _pos;//敌人位置
+    bool _slow;//是否被减速
+    int _slowsecond;//减速时长计数器
     int _type;//怪物类型
     bool _live;//是否生存
     double _speed;//移动速度

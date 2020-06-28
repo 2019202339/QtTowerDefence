@@ -21,9 +21,9 @@ Mywindow::Mywindow(QWidget *parent) ://初始化一个开始界面
     connect(bin1,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
         player->pause();//当前界面的音乐停止
         this->close();//当前界面关闭
-        MainWindow *scene = new MainWindow;//新建一个Mainwindow界面并打开
-        scene->setspeed(1);
-        scene->show();
+        MainWindow *scene1 = new MainWindow;//新建一个Mainwindow界面并打开
+        scene1->setspeed(1);
+        scene1->show();
     });
     MyButton *bin2 = new MyButton(":/new/prefix1/picture/Button2.png");//初始化一个开始按钮
     bin2->setParent(this);
@@ -31,9 +31,9 @@ Mywindow::Mywindow(QWidget *parent) ://初始化一个开始界面
     connect(bin2,&QPushButton::clicked,this,[=](){//利用lambda公式传输界面切换信号
         player->pause();//当前界面的音乐停止
         this->close();//当前界面关闭
-        MainWindow *scene = new MainWindow;//新建一个Mainwindow界面并打开
-        scene->setspeed(2);
-        scene->show();
+        MainWindow *scene2 = new MainWindow;//新建一个Mainwindow界面并打开
+        scene2->setspeed(2);
+        scene2->show();
     });
 }
 void Mywindow::paintEvent(QPaintEvent *){

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "mywindow.h"
 #include "ui_mainwindow.h"
 #include"QPainter"
 #include<QList>
@@ -16,6 +17,14 @@
 int j=0;
 void MainWindow::setspeed(int speed){
     game_speed=speed;
+    switch (game_speed) {
+    case 1:
+        wave.setmostwave(5);
+        break;
+    case 2:
+        wave.setmostwave(10);
+        break;
+    }
 }
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,7 +61,10 @@ void MainWindow::paintEvent(QPaintEvent *)
     for(int i=0;i<15;i++){//根据存活情况和登记情况绘制相应的怪物图像
         enemy[i].draw(&painter);//调用怪物绘制函数
     }
+    foreach (const Bullet *bullet, _bulletList)
+        bullet->draw(&painter);
     money.draw(&painter);//调用金钱系统绘制函数
+    wave.drawWave(&painter);//调用波数系统绘制函数
     for(int i=0;i<12;i++){
         tower[i].draw(&painter);//调用防御塔绘制函数
     }
@@ -64,6 +76,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     QPoint pressPos = event->pos();
     for(int i=0;i<12;i++){
         if(pos[i].containPoint(pressPos)&&pos[i].hastower()==false&&money.canbuy(tower[i].price())){//判断鼠标点击处是否为塔台并判断该塔台是否已经放置防御塔（“无放置”）
+            if(event->button() == Qt::LeftButton)
+                tower[i].settowertype(1);
+            if(event->button() == Qt::RightButton)
+                tower[i].settowertype(2);
             money=money-tower[i].price();//现有金币减去塔的价格
             tower[i].build();//建造防御塔
             pos[i].settower();//对塔台做“已有”标记
@@ -82,19 +98,27 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         }
     }
 
+
 }
 void MainWindow::timerEvent(QTimerEvent *event)
 {
     //怪物移动
     if(game_speed==1)
-    {if(event->timerId()==3){
-        enemy[j].birth();
-        j+=1;
+    {
+        if(event->timerId()==3&&j<15&&!win&&!lost){
+            enemy[j].birth();
+            j+=1;
     }
     if(event->timerId()==2){
+        wave.newWave(enemy);
+        if(wave.inupdata()){
+            j=0;
+            wave.reupdata();
+        }
         for(int i=0;i<15;i++){//遍历每个怪物状态
             if(enemy[i].live()){//判断怪物是否激活
                 enemy[i].move();//怪物移动动作
+                enemy[i].outslow();//检查怪物是否可以接触减速
                 enemy[i].turn(turnpoint);//怪物转弯动作
                 enemy[i].bite(hp);//判断怪物是否成功攻击基地
                 enemy[i].death();//判断怪物是否已经死亡
@@ -105,6 +129,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
             }
         }
         checkgame();
+
     }
     if(event->timerId()==4){
         for(int i=0;i<12;i++)//遍历每个塔的状态
@@ -112,9 +137,15 @@ void MainWindow::timerEvent(QTimerEvent *event)
             tower[i].attack(enemy);//执行攻击函数
     }
     update();//刷新画面
-}
+    }
     if(game_speed==2){
-        if(event->timerId()==5){
+        if(event->timerId()==5&&!win&&!lost){
+            wave.newWave(enemy);
+            if(wave.inupdata()){
+                j=0;
+                wave.reupdata();
+            }
+                    qDebug()<<wave.getmostwave()<<wave.getWave();
             for(int i=0;i<15;i++){//遍历每个怪物状态
                 if(enemy[i].live()){//判断怪物是否激活
                     enemy[i].move();//怪物移动动作
@@ -129,7 +160,7 @@ void MainWindow::timerEvent(QTimerEvent *event)
             }
             checkgame();
         }
-        if(event->timerId()==6){
+        if(event->timerId()==6&&j<15&&!win&&!lost){
                 enemy[j].birth();
                 j+=1;
             }
@@ -145,12 +176,27 @@ void MainWindow::checkgame(){
     if(hp<=0){//生命值小于等于0游戏失败
         lost=true;
     }
-    if(enemy[14].hadreward()&&hp>0){//最后一只怪物奖励状态完成，玩家生命值依然大于0游戏成功
+    if(wave.finishWave()&&hp>0){//最后一只怪物奖励状态完成，玩家生命值依然大于0游戏成功
         win=true;
     }
 }
+void MainWindow::removedBullet(Bullet *bullet)
+{
+    Q_ASSERT(bullet);
 
+    _bulletList.removeOne(bullet);
+    delete bullet;
+}
 
+void MainWindow::addBullet(Bullet *bullet)
+{
+    Q_ASSERT(bullet);
+
+    _bulletList.push_back(bullet);
+}
+int MainWindow::getspeed(){
+    return game_speed;
+}
 MainWindow::~MainWindow()
 {
     delete ui;

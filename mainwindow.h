@@ -10,10 +10,12 @@
 #include<enemy.h>
 #include <money.h>
 #include <grade.h>
+#include <wave.h>
+#include <bullet.h>
 namespace Ui {
 class MainWindow;
 }
-
+using namespace std;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -24,7 +26,10 @@ public:
     void mousePressEvent(QMouseEvent *);
     void timerEvent(QTimerEvent *event);
     void checkgame();
+    void addBullet(Bullet *bullet);
+    void removedBullet(Bullet *bullet);
     void setspeed(int speed);
+    int getspeed();
     ~MainWindow();
 
 private:
@@ -35,6 +40,8 @@ private:
     int hp=100;
     Grade grade=Grade(0);
     Money money=Money(300);
+    Wave wave=Wave(this);
+    QList<Bullet *>	_bulletList;
     QPoint turnpoint[4]=//初始化4个转弯点
     {
         QPoint(890, 200),
@@ -61,20 +68,20 @@ private:
     };
     Tower tower[12] =//初始化12座塔
     {
-            Tower(QPoint(130, 440)),
-            Tower(QPoint(310, 440)),
-            Tower(QPoint(490, 440)),
-            Tower(QPoint(670, 440)),
+            Tower(QPoint(130, 440),this),
+            Tower(QPoint(310, 440),this),
+            Tower(QPoint(490, 440),this),
+            Tower(QPoint(670, 440),this),
 
-            Tower(QPoint(200, 250)),
-            Tower(QPoint(380, 250)),
-            Tower(QPoint(560, 250)),
-            Tower(QPoint(740, 250)),
+            Tower(QPoint(200, 250),this),
+            Tower(QPoint(380, 250),this),
+            Tower(QPoint(560, 250),this),
+            Tower(QPoint(740, 250),this),
 
-            Tower(QPoint(160, 70)),
-            Tower(QPoint(340, 70)),
-            Tower(QPoint(520, 70)),
-            Tower(QPoint(700, 70))
+            Tower(QPoint(160, 70),this),
+            Tower(QPoint(340, 70),this),
+            Tower(QPoint(520, 70),this),
+            Tower(QPoint(700, 70),this)
     };
 
     Enemy enemy[15]=//初始化15只不同等级怪物（后期还会对波数和怪物数量进行进一步优化，目前暂定为15只）

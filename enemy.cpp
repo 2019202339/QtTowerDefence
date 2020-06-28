@@ -7,7 +7,7 @@
 double distance(QPoint m,QPoint n){
     return sqrt((m.x()-n.x())*(m.x()-n.x())+(m.y()-n.y())*(m.y()-n.y()));
 }//内置一个计算距离的函数
-Enemy::Enemy(QPoint pos,int type,int level):_pos(pos),_type(type),_live(false),_speed(1),_hp(100*level),_direction(1),_level(level),_hadreward(false),_reward(level*100)
+Enemy::Enemy(QPoint pos,int type,int level):_pos(pos),_slow(false),_slowsecond(0),_type(type),_live(false),_speed(9.75),_hp(100*level),_direction(1),_level(level),_hadreward(false),_reward(level*100)
 {
     if(_type==1){
         _picture= QPixmap(":/new/prefix1/picture/enemy1.png");
@@ -25,7 +25,7 @@ Enemy::Enemy(QPoint pos,int type,int level):_pos(pos),_type(type),_live(false),_
         _picture= QPixmap(":/new/prefix1/picture/enemy5.png");
     }
 }
-Enemy::Enemy(const Enemy &w):_pos(w._pos),_live(w._live),_speed(w._speed),_hp(w._hp),_direction(w._direction),_level(w._level),_hadreward(w._hadreward),_reward(w._level*100)
+Enemy::Enemy(const Enemy &w):_pos(w._pos),_slow(w._slow),_live(w._live),_speed(w._speed),_hp(w._hp),_direction(w._direction),_level(w._level),_hadreward(w._hadreward),_reward(w._level*100)
 {}
 QPoint Enemy::pos(){
     return _pos;
@@ -35,35 +35,46 @@ void Enemy::draw(QPainter *painter){
     if(_live){
         painter->setBrush(Qt::red);
         painter->drawRect(_pos.x(),_pos.y(),100,_level*5);
-        painter->setBrush(Qt::green);
+        if(_slow)
+           painter->setBrush(Qt::blue);
+        if(!_slow)
+            painter->setBrush(Qt::green);
         painter->drawRect(_pos.x(),_pos.y(),_hp/_level,_level*5);//利用矩形组合的方法绘制血槽
         painter->drawPixmap(_pos, _picture);
     }
     painter->restore();
 }
+void Enemy::inslow(){
+    _slow=true;
+    _speed=4.875;
+    _slowsecond=0;
+}
+void Enemy::outslow(){
+    if(_slowsecond>30){
+        _slow=false;
+        _speed=9.75;
+        _slowsecond=0;
+    }
+}
 void Enemy::move(){//123分别对应右下上三个方向
     switch (_direction){
         case 1:
-           _speed=10;
            _pos.setX(_pos.x()+_speed);//向右移动speed单位
            break;
         case 2:
-           _speed=9.5;
            _pos.setY(_pos.y()+_speed);//向下移动speed单位
            break;
         case 3:
-           _speed=10;
            _pos.setX(_pos.x()-_speed);//向左移动speed单位
            break;
         case 4:
-           _speed=9.5;
            _pos.setY(_pos.y()+_speed);//向下移动speed单位
            break;
         case 5:
-           _speed=10;
            _pos.setX(_pos.x()+_speed);//向右移动speed单位
            break;
     }
+    _slowsecond+=1;
 }
 void Enemy::turn(QPoint p[4]){
     if(_level==1){//结合怪物的体积大小设置其转向条件

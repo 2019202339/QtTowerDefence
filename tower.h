@@ -11,8 +11,9 @@ class Enemy;
 class Tower
 {
 public:
-    Tower(QPoint p);//用位置对塔进行初始化
+    Tower(QPoint p,MainWindow *game);//用位置对塔进行初始化
     void draw(QPainter *painter);//塔的绘制函数
+    void settowertype(int type);//设置塔的类型
     const QPoint centerPos() const;//返回该位置的中心点
     int range();//返回塔的攻击范围
     bool live();//判断塔的存在
@@ -22,12 +23,15 @@ public:
     void uninstall();//对塔进行拆除
     bool hastarget();//判断塔是否已经拥有攻击对象
     void attack(Enemy enemy[15]);//塔的攻击动作
+    int gettarget();
     int price();//返回塔的价格
+    void shootbullet(Enemy enemy);//射击动作
 
 
 
 protected:
     QPoint _pos;//塔的位置
+    int _type;//塔的类型
     int _range;//塔的攻击范围
     int _strength;//塔的伤害值
     int _rate;//塔的攻击频率
@@ -37,6 +41,7 @@ protected:
     int _target;//塔的攻击目标
     int _price;//塔的价格
     QPixmap _picture;//塔的图片
+    MainWindow *_game;//游戏界面
 };
 
 #endif // TOWER_H

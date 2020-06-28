@@ -33,7 +33,9 @@ SOURCES += \
     mywindow.cpp \
     mybutton.cpp \
     money.cpp \
-    grade.cpp
+    grade.cpp \
+    wave.cpp \
+    bullet.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +45,9 @@ HEADERS += \
     mywindow.h \
     mybutton.h \
     money.h \
-    grade.h
+    grade.h \
+    wave.h \
+    bullet.h
 
 
 FORMS += \

@@ -31,6 +31,12 @@
         <file>picture/faster.png</file>
         <file>picture/Button1.png</file>
         <file>picture/Button2.png</file>
+        <file>picture/tower3.png</file>
+        <file>picture/tower4.png</file>
+        <file>picture/returnbutton.png</file>
+        <file>picture/replay.png</file>
+        <file>picture/bullet.png</file>
+        <file>picture/bullet1.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
